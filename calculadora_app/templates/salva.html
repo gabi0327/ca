@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Guardar datos de juegos, capitulos y audiovisuales en JSON</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f5f5f7;
+            color: #333;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 30px;
+            background-color: #ffffff;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 40px;
+            font-size: 28px;
+            color: #333;
+        }
+
+        .boton-principal {
+            display:flex;
+            justify-content: center;
+            background-color: #3498db;
+            color: white;
+            padding: 12px 24px;
+            text-decoration: none;
+            border-radius: 50px;
+            transition: all 0.3s ease;
+            font-weight: bold;
+            font-size: 16px;
+            cursor: pointer;
+            margin: 0 auto;
+            width: 200px;
+        }
+
+        .boton-principal:hover {
+            background-color: #2980b9;
+            transform: translateY(2px);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.15);
+        }
+
+        
+
+        .enlace-inicio {
+            display: block;
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .enlace-inlace a {
+            color: #007bff;
+            text-decoration: none;
+            transition: color 0.3s ease;
+            font-weight: bold;
+            font-size: 14px;
+        }
+
+        .enlace-inlace a:hover {
+            color: #0056b3;
+        }
+        a {
+            width: 100%;
+            padding: 12px;
+            background-color: var(--primary-color);
+            color: rgb(3, 3, 3);
+            border: none;
+            border-radius: var(--border-radius);
+            font-size: 18px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            justify-content: center;
+            text-align: center;
+            display: flex;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Guardar datos de Juegos ,Capitulos y Audiovisaules en archivo JSON</h1>
+
+        <button id="btnGuardarTodos" class="boton-principal">Guardar todos los datos en JSON</button>
+        <a  href="{% url 'inicio' %}" class="enlace-inlace">Ir Atras</a>
+
+
+        <script>
+            // Función para guardar los datos combinados en un archivo JSON
+            function guardarDatosCombinados() {
+                // Obtenemos los datos de juegos y películas desde localStorage
+                const juegosGuardados = localStorage.getItem('juegos');
+                const peliculasGuardadas = localStorage.getItem('peliculas');
+                const capitulosGuardados = localStorage.getItem('capitulos');
+                
+                if (juegosGuardados && peliculasGuardadas && capitulosGuardados) {
+                    // Parseamos los datos guardados y los convertimos en objetos
+                    const juegos = JSON.parse(juegosGuardados);
+                    const peliculas = JSON.parse(peliculasGuardadas);
+                    const capitulos = JSON.parse(capitulosGuardados);
+                    
+                    // Combinamos ambos conjuntos de datos en un solo objeto
+                    const datosCombinados = { 
+                        juegos: juegos,
+                        peliculas: peliculas, 
+                        capitulos: capitulos 
+                    };
+                    
+                    // Creamos un archivo blob con los datos combinados
+                    const blob = new Blob([JSON.stringify(datosCombinados, null, 2)], {type: 'application/json'});
+                    
+                    // Creamos un elemento anchor para descargar el archivo
+                    const url = window.URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.style.display = 'none';
+                    a.href = url;
+                    a.download = 'datos.json';
+                    a.click();
+                    
+                    // Limpiamos la referencia del objeto URL creado
+                    window.URL.revokeObjectURL(url);
+                } else {
+                    alert('No hay datos de juegos o películas guardados o capitulos.');
+                }
+            }
+    
+            // Event listener para el botón de guardar todos los datos
+            document.getElementById('btnGuardarTodos').addEventListener('click', guardarDatosCombinados);
+    
+        </script>
+    </div>
+</body>
+</html>
